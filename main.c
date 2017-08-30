@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include "account.h"
 
 // Cuenten con este codigo monolitico en una funcion
 // main como punto de partida.
@@ -13,6 +14,11 @@
 // distribuidas en headers. Pueden modificar el Makefile
 // libremente para lograr esto.
 int main(int argc, char** argv) {
+  struct Account acc;
+  acc.bank_id = 10;
+  printf("%d\n", acc.bank_id );
+
+
   size_t bufsize = 512;
   char* commandBuf = malloc(sizeof(char)*bufsize);
 
@@ -46,7 +52,6 @@ int main(int argc, char** argv) {
       // pueden iniciarse procesos sin control.
       // Buscar en Google "fork bomb"
       pid_t sucid = fork();
-
       if (sucid > 0) {
         printf("Sucursal creada con ID '%d'\n", sucid);
 
@@ -65,6 +70,7 @@ int main(int argc, char** argv) {
           int bytes = read(bankPipe[0], readbuffer, sizeof(readbuffer));
           printf("Soy la sucursal '%d' y me llego mensaje '%s' de '%d' bytes.\n",
             sucId, readbuffer, bytes);
+
 
           // Usar usleep para dormir una cantidad de microsegundos
           // usleep(100000);
