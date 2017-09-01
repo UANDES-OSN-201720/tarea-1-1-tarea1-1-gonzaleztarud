@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include "account.h"
+#include <pthread.h>
 
 // Cuenten con este codigo monolitico en una funcion
 // main como punto de partida.
@@ -13,12 +13,14 @@
 // e incluso en archivos separados, con dependencias
 // distribuidas en headers. Pueden modificar el Makefile
 // libremente para lograr esto.
+
+int RandRange(int Min, int Max){
+    int diff = Max-Min;
+    return (int) (((double)(diff+1)/RAND_MAX) * rand() + Min);
+}
+
 int main(int argc, char** argv) {
-  struct Account acc;
-  acc.bank_id = 10;
-  printf("%d\n", acc.bank_id );
-
-
+  int *accounts;
   size_t bufsize = 512;
   char* commandBuf = malloc(sizeof(char)*bufsize);
 
@@ -51,9 +53,18 @@ int main(int argc, char** argv) {
       // es potencialmente peligroso, dado que accidentalmente
       // pueden iniciarse procesos sin control.
       // Buscar en Google "fork bomb"
+      accounts = (int *)malloc(sizeof(int)*1000);
+
       pid_t sucid = fork();
       if (sucid > 0) {
         printf("Sucursal creada con ID '%d'\n", sucid);
+        //Arreglo de 1000 cuentas por sucursal
+        //Llenar el arreglo con los montos para las 1000 cuentas
+        for (size_t i = 0; i < sizeof(accounts); i++) {
+          accounts[i] = RandRange(1000, 500000000);
+        }
+
+        printf("%d\n",accounts[0]);
 
         // Enviando saludo a la sucursal
         char msg[] = "Hola sucursal, como estas?";
