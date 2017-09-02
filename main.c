@@ -55,9 +55,12 @@ int main(int argc, char** argv) {
       // Buscar en Google "fork bomb"
       char line[256];
       int N;
+      printf("%s\n", "Ingrese numero de cuentas , sino ingrese 0 para crear 1000 por defecto: " );
       if (fgets(line, sizeof(line) , stdin)) {
         if(1 == sscanf(line,"%d" , &N)) {
-
+          if (N == 0){
+            N = 1000;
+          }
         }
       }
 
@@ -72,7 +75,7 @@ int main(int argc, char** argv) {
           accounts[i] = RandRange(1000, 500000000);
         }
 
-        printf("%d\n", accounts[400]);
+        printf("%d\n", accounts[800]);
 
 
         // Enviando saludo a la sucursal
