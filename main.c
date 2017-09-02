@@ -53,18 +53,27 @@ int main(int argc, char** argv) {
       // es potencialmente peligroso, dado que accidentalmente
       // pueden iniciarse procesos sin control.
       // Buscar en Google "fork bomb"
-      accounts = (int *)malloc(sizeof(int)*1000);
+      char line[256];
+      int N;
+      if (fgets(line, sizeof(line) , stdin)) {
+        if(1 == sscanf(line,"%d" , &N)) {
+
+        }
+      }
+
+      accounts = (int*)malloc(sizeof(int)*N);
 
       pid_t sucid = fork();
       if (sucid > 0) {
         printf("Sucursal creada con ID '%d'\n", sucid);
         //Arreglo de 1000 cuentas por sucursal
         //Llenar el arreglo con los montos para las 1000 cuentas
-        for (size_t i = 0; i < sizeof(accounts); i++) {
+        for (size_t i = 0; i < N; i++) {
           accounts[i] = RandRange(1000, 500000000);
         }
 
-        printf("%d\n",accounts[0]);
+        printf("%d\n", accounts[400]);
+
 
         // Enviando saludo a la sucursal
         char msg[] = "Hola sucursal, como estas?";
