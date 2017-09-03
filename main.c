@@ -21,11 +21,21 @@ int RandRange(int Min, int Max){
     return (int) (((double)(diff+1)/RAND_MAX) * rand() + Min);
 }
 
+
 int main(int argc, char** argv) {
   char line[256];
   int *accounts;
   size_t bufsize = 512;
   char* commandBuf = malloc(sizeof(char)*bufsize);
+
+  int *sucList;
+  int count = 0;
+  //int sucList[200];
+  sucList = (int*)malloc(sizeof(int)*200);
+
+  int *accountList;
+  accountList = (int*)malloc(sizeof(int)*200);
+
 
   // Para guardar descriptores de pipe
   // el elemento 0 es para lectura
@@ -51,7 +61,12 @@ int main(int argc, char** argv) {
     if (!strncmp("quit", commandBuf, strlen("quit"))) {
         break;
     }else if (!strncmp("list", commandBuf, strlen("list"))){
-        system("ps -a");
+        //system("ps -a");
+        printf("%s\n", "Sucursales actualmente activas: \n" );
+        for (size_t i = 0; i < count; i++) {
+          printf("ID: '%d'", sucList[i]);
+          printf("  Cuentas actualmente activas: '%d'\n", accountList[i] );
+        }
     }
     else if (!strncmp("kill", commandBuf, strlen("kill"))){
       int id;
@@ -80,7 +95,6 @@ int main(int argc, char** argv) {
       // es potencialmente peligroso, dado que accidentalmente
       // pueden iniciarse procesos sin control.
       // Buscar en Google "fork bomb"
-
       int N;
       printf("%s\n", "Ingrese numero de cuentas , sino ingrese 0 para crear 1000 por defecto: " );
       if (fgets(line, sizeof(line) , stdin)) {
@@ -90,6 +104,7 @@ int main(int argc, char** argv) {
           }
         }
       }
+      accountList[count] = N;
 
       accounts = (int*)malloc(sizeof(int)*N);
 
@@ -98,16 +113,17 @@ int main(int argc, char** argv) {
         printf("Sucursal creada con ID '%d'\n", sucid);
         //Arreglo de 1000 cuentas por sucursal
         //Llenar el arreglo con los montos para las 1000 cuentas
+
+        sucList[count] = sucid % 1000;
         for (size_t i = 0; i < N; i++) {
           accounts[i] = RandRange(1000, 500000000);
         }
 
-        printf("%d\n", accounts[800]);
-
-
         // Enviando saludo a la sucursal
         char msg[] = "Hola sucursal, como estas?";
         write(bankPipe[1], msg, (strlen(msg)+1));
+
+        count++;
 
         continue;
       }
@@ -115,6 +131,7 @@ int main(int argc, char** argv) {
       else if (!sucid) {
         int sucId = getpid() % 1000;
         printf("Hola, soy la sucursal '%d'\n", sucId);
+        //while (count < sizeof(sucList))
         while (true) {
           // 100 milisegundos...
           int bytes = read(bankPipe[0], readbuffer, sizeof(readbuffer));
