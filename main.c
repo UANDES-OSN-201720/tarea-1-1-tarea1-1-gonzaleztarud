@@ -22,7 +22,7 @@ typedef struct transaction{
   int o_account; //cuenta de origen
   int d_accont; //cuenta de destino
   int amount;
-  int type: //1: deposito, 2: retiro, 3: transferencia
+  int type; //1: deposito, 2: retiro, 3: transferencia
 }transaction;
 
 
@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
 
   // Se crea un pipe...
   pipe(bankPipe);
+  pipe(sucPipe);
 
   const int bankId = getpid() % 1000;
   printf("Bienvenido a Banco '%d'\n", bankId);
