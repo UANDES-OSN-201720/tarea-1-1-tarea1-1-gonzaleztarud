@@ -71,15 +71,37 @@ int main(int argc, char** argv) {
     }
     else if (!strncmp("dump_accs", commandBuf, strlen("dump_accs"))){
       int id;
+      int j = 0;
+      char id_cast[20];
+      FILE *fp;
       printf("%s\n", "Ingrese ID de sucursal para generar el archivo CSV: " );
       if (fgets(line, sizeof(line) , stdin)) {
         if(1 == sscanf(line,"%d" , &id)) {
-          //if ( id == lista pid ){}
-          FILE *fp;
-          char inicial_buffer[100];
-          fp = fopen ("dump_accss_PID.csv", "w+");
-          fprintf(fp, "%d\n", N );
-          fclose (fp);
+
+          for (int i = 0; i < N; i++) {
+
+            if ( id == sucList[i] ){
+              sprintf(id_cast,"dump_accss_%d.csv",id);
+              fp = fopen (id_cast, "w+");
+              fprintf(fp, "%s,%s\n", "Numero de cuenta" , "Saldo" );
+              while (j < N) {
+
+              char inicial_buffer[100];
+              fprintf(fp, "%d,%d\n", j , accounts[j] );
+              j++;
+
+            }
+              fclose (fp);
+
+            }
+            else {
+              printf("%s\n", "Error, ID no registrado" );
+              break;
+            }
+
+          }
+
+
         }
 
     }
@@ -87,7 +109,7 @@ int main(int argc, char** argv) {
 
     else if (!strncmp("kill", commandBuf, strlen("kill"))){
       int id;
-      printf("%s\n", "Ingrese ID de sucursal para detenerla: " );
+      printf("%s\n", "Ingrese PID de sucursal para detenerla: " );  //Debiese ser ID :/
       if (fgets(line, sizeof(line) , stdin)) {
         if(1 == sscanf(line,"%d" , &id)) {
           kill(id, SIGTERM);
