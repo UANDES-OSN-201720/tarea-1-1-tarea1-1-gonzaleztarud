@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <pthread.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 // Cuenten con este codigo monolitico en una funcion
 // main como punto de partida.
@@ -20,6 +22,7 @@ int RandRange(int Min, int Max){
 }
 
 int main(int argc, char** argv) {
+  char line[256];
   int *accounts;
   size_t bufsize = 512;
   char* commandBuf = malloc(sizeof(char)*bufsize);
@@ -48,12 +51,34 @@ int main(int argc, char** argv) {
     if (!strncmp("quit", commandBuf, strlen("quit"))) {
         break;
     }
+    else if (!strncmp("kill", commandBuf, strlen("kill"))){
+      int id;
+      printf("%s\n", "Ingrese ID de sucursal para detenerla: " );
+      if (fgets(line, sizeof(line) , stdin)) {
+        if(1 == sscanf(line,"%d" , &id)) {
+          kill(id, SIGTERM);
+          bool died = false;
+          for (int loop = 0;!died && loop < 5; loop++) {
+            int status;
+            sleep(1);
+            if(waitpid(id,&status, WNOHANG) == id) died = true;
+
+          }
+          if (!died) kill(id,SIGKILL);
+
+
+            printf("%s\n", "Proceso detenido" );
+          }
+        }
+      }
+
+
     else if (!strncmp("init", commandBuf, strlen("init"))) {
       // OJO: Llamar a fork dentro de un ciclo
       // es potencialmente peligroso, dado que accidentalmente
       // pueden iniciarse procesos sin control.
       // Buscar en Google "fork bomb"
-      char line[256];
+
       int N;
       printf("%s\n", "Ingrese numero de cuentas , sino ingrese 0 para crear 1000 por defecto: " );
       if (fgets(line, sizeof(line) , stdin)) {
