@@ -50,6 +50,8 @@ int main(int argc, char** argv) {
 
     if (!strncmp("quit", commandBuf, strlen("quit"))) {
         break;
+    }else if (!strncmp("list", commandBuf, strlen("list"))){
+        system("ps -a");
     }
     else if (!strncmp("kill", commandBuf, strlen("kill"))){
       int id;
