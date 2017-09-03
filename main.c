@@ -25,6 +25,8 @@ typedef struct transaction{
   int type: //1: deposito, 2: retiro, 3: transferencia
 }transaction;
 
+
+
 int RandRange(int Min, int Max){
     int diff = Max-Min;
     return (int) (((double)(diff+1)/RAND_MAX) * rand() + Min);
@@ -50,6 +52,7 @@ int main(int argc, char** argv) {
   // Para guardar descriptores de pipe
   // el elemento 0 es para lectura
   // y el elemento 1 es para escritura.
+  int sucPipe[2];
   int bankPipe[2];
   char readbuffer[80]; // buffer para lectura desde pipe
 
