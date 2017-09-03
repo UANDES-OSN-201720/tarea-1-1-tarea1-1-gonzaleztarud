@@ -23,6 +23,7 @@ int RandRange(int Min, int Max){
 
 
 int main(int argc, char** argv) {
+  int N;
   char line[256];
   int *accounts;
   size_t bufsize = 512;
@@ -68,6 +69,22 @@ int main(int argc, char** argv) {
           printf("  Cuentas actualmente activas: '%d'\n", accountList[i] );
         }
     }
+    else if (!strncmp("dump_accs", commandBuf, strlen("dump_accs"))){
+      int id;
+      printf("%s\n", "Ingrese ID de sucursal para generar el archivo CSV: " );
+      if (fgets(line, sizeof(line) , stdin)) {
+        if(1 == sscanf(line,"%d" , &id)) {
+          //if ( id == lista pid ){}
+          FILE *fp;
+          char inicial_buffer[100];
+          fp = fopen ("dump_accss_PID.csv", "w+");
+          fprintf(fp, "%d\n", N );
+          fclose (fp);
+        }
+
+    }
+  }
+
     else if (!strncmp("kill", commandBuf, strlen("kill"))){
       int id;
       printf("%s\n", "Ingrese ID de sucursal para detenerla: " );
@@ -95,7 +112,7 @@ int main(int argc, char** argv) {
       // es potencialmente peligroso, dado que accidentalmente
       // pueden iniciarse procesos sin control.
       // Buscar en Google "fork bomb"
-      int N;
+
       printf("%s\n", "Ingrese numero de cuentas , sino ingrese 0 para crear 1000 por defecto: " );
       if (fgets(line, sizeof(line) , stdin)) {
         if(1 == sscanf(line,"%d" , &N)) {
