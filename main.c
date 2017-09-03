@@ -16,6 +16,15 @@
 // distribuidas en headers. Pueden modificar el Makefile
 // libremente para lograr esto.
 
+typedef struct transaction{
+  int o_suc; //sucursal de origen
+  int d_suc; //sucursal de destino
+  int o_account; //cuenta de origen
+  int d_accont; //cuenta de destino
+  int amount;
+  int type: //1: deposito, 2: retiro, 3: transferencia
+}transaction;
+
 int RandRange(int Min, int Max){
     int diff = Max-Min;
     return (int) (((double)(diff+1)/RAND_MAX) * rand() + Min);
