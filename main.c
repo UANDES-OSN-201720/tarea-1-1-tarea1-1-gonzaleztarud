@@ -25,7 +25,20 @@ typedef struct transaction{
   int type; //1: deposito, 2: retiro, 3: transferencia
 }transaction;
 
+int money_withdraw(transaction t){
+//Metodo para retirar dinero de cuenta   
+}
 
+int money_deposit(transaction t) {
+ // Metodo para transferir dinero de cuenta origen a una cuenta de destino 
+}
+int raise_money(int sucid, int *accounts , int mono){
+ //Metodo para aumentar dinero en una cuenta 
+}
+
+int generate_transactions(){
+ int time_ = RandRange(100,500); 
+}
 
 int RandRange(int Min, int Max){
     int diff = Max-Min;
