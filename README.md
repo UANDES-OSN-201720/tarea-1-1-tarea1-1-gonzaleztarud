@@ -20,9 +20,9 @@ Funciones sin implementar:
 * En Procesos faltó implementar threads debido a falta de tiempo
 * En comunicación entre procesos faltó la implementación de pipes entre sucursal-matriz y matriz-sucursal debido a la complejidad.
 
-En las operaciones no se implementó:(debido a la complejidad)
-* quit está implementado parcialmente
-* dump 
-* dump_errs
+* En las operaciones no se implementó:(debido a la complejidad)
+  * quit está implementado parcialmente
+  * dump 
+  * dump_errs
 
 El mayor problema de las funciones que faltaron fue el no haber tenido suficiente conocimiento y práctica en el lenguaje C lo que nos hizo demorar bastante en hacer cosas “sencillas” , entonces esto nos afectó en la efectividad del desarrollo de la tarea.
