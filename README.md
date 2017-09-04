@@ -19,6 +19,7 @@ El programa no reconoce el manejo de errores, solo en el dump_acces. En general,
 Funciones sin implementar:
 * En Procesos faltó implementar threads debido a falta de tiempo
 * En comunicación entre procesos faltó la implementación de pipes entre sucursal-matriz y matriz-sucursal debido a la complejidad.
+
 En las operaciones no se implementó:(debido a la complejidad)
 * quit está implementado parcialmente
 * dump 
