@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include <signal.h>
 #include <sys/wait.h>
+#include <pthread.h>
 
 // Cuenten con este codigo monolitico en una funcion
 // main como punto de partida.
@@ -26,18 +27,25 @@ typedef struct transaction{
 }transaction;
 
 int money_withdraw(transaction t){
-//Metodo para retirar dinero de cuenta   
+//Metodo para retirar dinero de cuenta
 }
 
 int money_deposit(transaction t) {
- // Metodo para transferir dinero de cuenta origen a una cuenta de destino 
+ // Metodo para transferir dinero de cuenta origen a una cuenta de destino
 }
 int raise_money(int sucid, int *accounts , int mono){
- //Metodo para aumentar dinero en una cuenta 
+ //Metodo para aumentar dinero en una cuenta
 }
 
 int generate_transactions(){
- int time_ = RandRange(100,500); 
+ //int time_ = RandRange(100,500);
+}
+
+void *ejecucion_sucursal(){
+  // Aca hacer todo lo que deberia hacer una sucursal , retirar, depositar , transferir entre sucursales etc , generar transacciones aleatorias.
+}
+void *ejecucion_banco(){
+  // Aca leer las transacciones y nose que mas
 }
 
 int RandRange(int Min, int Max){
@@ -53,9 +61,10 @@ int main(int argc, char** argv) {
   size_t bufsize = 512;
   char* commandBuf = malloc(sizeof(char)*bufsize);
 
+  pthread_t t_banco, t_sucursal;
+
   int *sucList;
   int count = 0;
-  //int sucList[200];
   sucList = (int*)malloc(sizeof(int)*200);
 
   int *accountList;
@@ -76,6 +85,7 @@ int main(int argc, char** argv) {
   const int bankId = getpid() % 1000;
   printf("Bienvenido a Banco '%d'\n", bankId);
 
+  pthread_create(&t_banco,NULL,ejecucion_banco,NULL);
   while (true) {
     printf(">>");
     getline(&commandBuf, &bufsize, stdin);
@@ -115,7 +125,6 @@ int main(int argc, char** argv) {
               char inicial_buffer[100];
               fprintf(fp, "%d,%d\n", j , accounts[j] );
               j++;
-
             }
               fclose (fp);
 
@@ -124,15 +133,10 @@ int main(int argc, char** argv) {
               printf("%s\n", "Error, ID no registrado" );
               break;
             }
-
           }
-
-
         }
-
     }
   }
-
     else if (!strncmp("kill", commandBuf, strlen("kill"))){
       int id;
       printf("%s\n", "Ingrese PID de sucursal para detenerla: " );  //Debiese ser ID :/
@@ -147,13 +151,10 @@ int main(int argc, char** argv) {
 
           }
           if (!died) kill(id,SIGKILL);
-
-
-            printf("%s\n", "Proceso detenido" );
+            printf("%s\n", "Proceso detenido");
           }
         }
       }
-
 
     else if (!strncmp("init", commandBuf, strlen("init"))) {
       // OJO: Llamar a fork dentro de un ciclo
@@ -183,7 +184,6 @@ int main(int argc, char** argv) {
         for (size_t i = 0; i < N; i++) {
           accounts[i] = RandRange(1000, 500000000);
         }
-
         // Enviando saludo a la sucursal
         char msg[] = "Hola sucursal, como estas?";
         write(bankPipe[1], msg, (strlen(msg)+1));
@@ -195,6 +195,7 @@ int main(int argc, char** argv) {
       // Proceso de sucursal
       else if (!sucid) {
         int sucId = getpid() % 1000;
+        pthread_create(&t_sucursal,NULL,ejecucion_sucursal,NULL);
         printf("Hola, soy la sucursal '%d'\n", sucId);
         //while (count < sizeof(sucList))
         while (true) {
