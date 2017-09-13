@@ -56,12 +56,15 @@ int RandRange(int Min, int Max){
 
 int main(int argc, char** argv) {
   int N;
+  int T;
+  int err;
+  int l;
   char line[256];
   int *accounts;
   size_t bufsize = 512;
   char* commandBuf = malloc(sizeof(char)*bufsize);
 
-  pthread_t t_banco, t_sucursal;
+  pthread_t t_banco, t_sucursal[8];
 
   int *sucList;
   int count = 0;
@@ -170,6 +173,20 @@ int main(int argc, char** argv) {
           }
         }
       }
+      printf("%s\n", "Ingrese numero de terminales que desee crear: " );
+      if (fgets(line, sizeof(line) , stdin)) {
+        if(1 == sscanf(line,"%d" , &T)) {
+          while(T<1 || T>8){
+            printf("%s\n", "Numero de terminales no permitido,ingrese nuevamente entre 1 y 8: " );
+            if (fgets(line, sizeof(line) , stdin)) {
+              if(1 == sscanf(line,"%d" , &T)) {
+                  continue;
+              }
+            }
+           }
+          }
+        }
+
       accountList[count] = N;
 
       accounts = (int*)malloc(sizeof(int)*N);
@@ -195,7 +212,17 @@ int main(int argc, char** argv) {
       // Proceso de sucursal
       else if (!sucid) {
         int sucId = getpid() % 1000;
-        pthread_create(&t_sucursal,NULL,ejecucion_sucursal,NULL);
+        while ( l < T ){
+            err = pthread_create(&t_sucursal[l],NULL,ejecucion_sucursal,NULL);
+            if ( err != 0) {
+              printf("%s%d\n", "No se puede crear thread " , strerror(err) );
+            }
+            else {
+               printf("%s\n", "Creacion exitosa" );
+            }
+            l++;
+
+        }
         printf("Hola, soy la sucursal '%d'\n", sucId);
         //while (count < sizeof(sucList))
         while (true) {
