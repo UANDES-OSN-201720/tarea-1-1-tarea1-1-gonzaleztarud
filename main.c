@@ -68,37 +68,41 @@ int RandRange(int Min, int Max){
 
 void *makeTransactions(void *thread){
   int ran_num = RandRange(0,count);
-printf("%s\n", "Hola" );
+
+
   transaction *transaction_data = (transaction*)thread;
-  transaction_data->amount = RandRange(1000, 500000000);
-  transaction_data->type = RandRange(1, 3);
-  transaction_data->o_suc = sucList[ran_num];
-  transaction_data->d_suc = sucList[ran_num];
+  (*transaction_data).amount = RandRange(1000, 500000000);
+  (*transaction_data).type = RandRange(1, 3);
+  (*transaction_data).o_suc = sucList[ran_num];
+  (*transaction_data).d_suc = sucList[ran_num];
 
-  if (transaction_data->type== 1) {
+
+  if ((*transaction_data).type== 1) {
     //deposito
-    transaction_data->d_account = transaction_data->d_account + transaction_data->amount;
+    (*transaction_data).d_account = (*transaction_data).d_account + (*transaction_data).amount;
 
-  }else if (transaction_data->type == 2) {
+  }else if ((*transaction_data).type == 2) {
     //retiro
-    if (  transaction_data->d_account <= 0) {
+    if (  (*transaction_data).d_account <= 0) {
       printf("%s\n", "Error, no tiene dinero suficiente para hacer un retiro \n" );
       /* code */
     }else{
-      transaction_data->d_account = transaction_data->d_account - transaction_data->amount;
+      (*transaction_data).d_account = (*transaction_data).d_account - (*transaction_data).amount;
     }
 
   }else if (transaction_data->type == 3) {
     //transferencia
-    if (transaction_data->o_account <= 0) {
+    if ((*transaction_data).o_account <= 0) {
       /* code */
       printf("%s\n", "Error, no tiene dinero suficiente para hacer una transferencia \n" );
 
     }else{
-      transaction_data->o_account = transaction_data->o_account - transaction_data->amount;
-      transaction_data->d_account = transaction_data->d_account + transaction_data->amount;
+      (*transaction_data).o_account = (*transaction_data).o_account - (*transaction_data).amount;
+      (*transaction_data).d_account = (*transaction_data).d_account + (*transaction_data).amount;
     }
   }
+  
+
 return NULL;
 
 }
@@ -263,18 +267,24 @@ int main(int argc, char** argv) {
       // Proceso de sucursal
       else if (!sucid) {
         int sucId = getpid() % 1000;
+        //pthread_join(t_sucursal[l],NULL);
 
         while ( l < T ){
             err = pthread_create(&t_sucursal[l],NULL, makeTransactions,NULL);
-            pthread_join(t_sucursal[l],NULL);
             if ( err != 0) {
               printf("%s%d\n", "No se puede crear thread " , strerror(err) );
             }
             else {
                printf("%s\n", "Creacion exitosa" );
+
             }
             l++;
+
         }
+        for (size_t i = 0; i < T; i++) {
+          pthread_join(t_sucursal[i],NULL);
+       }
+
         printf("Hola, soy la sucursal '%d'\n", sucId);
         //while (count < sizeof(sucList))
         while (true) {

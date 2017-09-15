@@ -1,0 +1,9 @@
+/home/mjgonzalez6/tarea-1-1-tarea1-1-gonzaleztarud/main.c: In function ‘main’:
+/home/mjgonzalez6/tarea-1-1-tarea1-1-gonzaleztarud/main.c:275:22: warning: format ‘%d’ expects argument of type ‘int’, but argument 3 has type ‘char *’ [-Wformat=]
+               printf("%s%d\n", "No se puede crear thread " , strerror(err) );
+                      ^
+/tmp/ccKhSJnW.o: En la función `main':
+main.c:(.text+0x322): referencia a `pthread_create' sin definir
+main.c:(.text+0xa4d): referencia a `pthread_create' sin definir
+main.c:(.text+0xace): referencia a `pthread_join' sin definir
+collect2: error: ld returned 1 exit status
