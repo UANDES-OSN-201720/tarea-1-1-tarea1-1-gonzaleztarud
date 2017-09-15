@@ -266,7 +266,7 @@ int main(int argc, char** argv) {
 
         while ( l < T ){
             err = pthread_create(&t_sucursal[l],NULL, makeTransactions,NULL);
-
+            pthread_join(t_sucursal[l],NULL);
             if ( err != 0) {
               printf("%s%d\n", "No se puede crear thread " , strerror(err) );
             }
