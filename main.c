@@ -17,7 +17,7 @@
 // distribuidas en headers. Pueden modificar el Makefile
 // libremente para lograr esto.
 
-typedef struct transaction{
+typedef struct thread{
   int o_suc; //sucursal de origen
   int d_suc; //sucursal de destino
   int o_account; //cuenta de origen
@@ -65,34 +65,34 @@ int RandRange(int Min, int Max){
     return (int) (((double)(diff+1)/RAND_MAX) * rand() + Min);
 }
 
-void *makeTransactions(void *transaction,int _o_suc, int _d_suc){
-  transaction *transaction_data = (transaction*)transaction;
+void *makeTransactions(void *thread,int _o_suc, int _d_suc){
+  transaction *transaction_data = (transaction*)thread;
   transaction_data->amount = RandRange(1000, 500000000);
   transaction_data->type = RandRange(1, 3);
   transaction_data->o_suc = _o_suc;
   transaction_data->d_suc = _d_suc;
-  if (type== 1) {
+  if (transaction_data->type== 1) {
     //deposito
-    transaction_data->d_account = d_account + amount
+    transaction_data->d_account = transaction_data->d_account + transaction_data->amount;
 
-  }else if (type == 2) {
+  }else if (transaction_data->type == 2) {
     //retiro
     if (  transaction_data->d_account <= 0) {
-      printf("Error, no tiene dinero suficiente para hacer un retiro%s\n", );
+      printf("%s\n", "Error, no tiene dinero suficiente para hacer un retiro \n" );
       /* code */
     }else{
-      transaction_data->d_account = d_account - amount
+      transaction_data->d_account = transaction_data->d_account - transaction_data->amount;
     }
 
-  }else if (type == 3) {
+  }else if (transaction_data->type == 3) {
     //transferencia
     if (transaction_data->o_account <= 0) {
       /* code */
-      printf("Error, no tiene dinero suficiente para hacer una transferencia%s\n", );
+      printf("%s\n", "Error, no tiene dinero suficiente para hacer una transferencia \n" );
 
     }else{
-      transaction_data->o_account = o_account - amount;
-      transaction_data->d_account = d_account + amount;
+      transaction_data->o_account = transaction_data->o_account - transaction_data->amount;
+      transaction_data->d_account = transaction_data->d_account + transaction_data->amount;
     }
   }
 
