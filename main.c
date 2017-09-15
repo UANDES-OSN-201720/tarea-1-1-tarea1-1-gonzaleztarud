@@ -21,7 +21,7 @@ typedef struct transaction{
   int o_suc; //sucursal de origen
   int d_suc; //sucursal de destino
   int o_account; //cuenta de origen
-  int d_accont; //cuenta de destino
+  int d_account; //cuenta de destino
   int amount;
   int type; //1: deposito, 2: retiro, 3: transferencia
 }transaction;
@@ -63,6 +63,40 @@ void *ejecucion_banco(){
 int RandRange(int Min, int Max){
     int diff = Max-Min;
     return (int) (((double)(diff+1)/RAND_MAX) * rand() + Min);
+}
+
+void *makeTransactions(void *t, int *sucList, int _o_suc, int _d_suc){
+  transaction *transaction_data = (transaction*)t;
+  transaction_data->amount = RandRange(1000, 500000000);
+  transaction_data->type = RandRange(1, 3);
+  transaction_data->o_suc = _o_suc;
+  transaction_data->d_suc = _d_suc;
+  if (type== 1) {
+    //deposito
+    transaction_data->d_account = d_account + amount
+
+  }else if (type == 2) {
+    //retiro
+    if (  transaction_data->d_account <= 0) {
+      printf("Error, no tiene dinero suficiente para hacer un retiro%s\n", );
+      /* code */
+    }else{
+      transaction_data->d_account = d_account - amount
+    }
+
+  }else if (type == 3) {
+    //transferencia
+    if (transaction_data->o_account <= 0) {
+      /* code */
+      printf("Error, no tiene dinero suficiente para hacer una transferencia%s\n", );
+
+    }else{
+      transaction_data->o_account = o_account - amount;
+      transaction_data->d_account = d_account + amount;      
+    }
+  }
+
+
 }
 
 
