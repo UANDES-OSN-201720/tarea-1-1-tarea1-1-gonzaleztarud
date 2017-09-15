@@ -16,7 +16,8 @@
 // e incluso en archivos separados, con dependencias
 // distribuidas en headers. Pueden modificar el Makefile
 // libremente para lograr esto.
-
+  int count = 0;
+  int *sucList;
 typedef struct thread{
   int o_suc; //sucursal de origen
   int d_suc; //sucursal de destino
@@ -65,12 +66,15 @@ int RandRange(int Min, int Max){
     return (int) (((double)(diff+1)/RAND_MAX) * rand() + Min);
 }
 
-void *makeTransactions(void *thread,int _o_suc, int _d_suc){
+void *makeTransactions(void *thread){
+  int ran_num = RandRange(0,count);
+printf("%s\n", "Hola" );
   transaction *transaction_data = (transaction*)thread;
   transaction_data->amount = RandRange(1000, 500000000);
   transaction_data->type = RandRange(1, 3);
-  transaction_data->o_suc = _o_suc;
-  transaction_data->d_suc = _d_suc;
+  transaction_data->o_suc = sucList[ran_num];
+  transaction_data->d_suc = sucList[ran_num];
+
   if (transaction_data->type== 1) {
     //deposito
     transaction_data->d_account = transaction_data->d_account + transaction_data->amount;
@@ -95,7 +99,7 @@ void *makeTransactions(void *thread,int _o_suc, int _d_suc){
       transaction_data->d_account = transaction_data->d_account + transaction_data->amount;
     }
   }
-
+return NULL;
 
 }
 
@@ -104,7 +108,7 @@ int main(int argc, char** argv) {
   int N;
   int T;
   int err;
-  int l;
+  int l = 0;
   char line[256];
   int *accounts;
 
@@ -113,8 +117,8 @@ int main(int argc, char** argv) {
 
   pthread_t t_banco, t_sucursal[8];
 
-  int *sucList;
-  int count = 0;
+
+
   sucList = (int*)malloc(sizeof(int)*200);
 
   int *accountList;
@@ -259,9 +263,10 @@ int main(int argc, char** argv) {
       // Proceso de sucursal
       else if (!sucid) {
         int sucId = getpid() % 1000;
-        int ran_num = RandRange(0,count);
+
         while ( l < T ){
-            err = pthread_create(&t_sucursal[l],NULL, makeTransactions(sucList[ran_num],sucList[ran_num]),NULL);
+            err = pthread_create(&t_sucursal[l],NULL, makeTransactions,NULL);
+
             if ( err != 0) {
               printf("%s%d\n", "No se puede crear thread " , strerror(err) );
             }
@@ -269,7 +274,6 @@ int main(int argc, char** argv) {
                printf("%s\n", "Creacion exitosa" );
             }
             l++;
-
         }
         printf("Hola, soy la sucursal '%d'\n", sucId);
         //while (count < sizeof(sucList))
