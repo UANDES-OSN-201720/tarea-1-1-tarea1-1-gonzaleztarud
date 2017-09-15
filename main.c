@@ -47,15 +47,15 @@ void *ejecucion_sucursal(){
 }
 
 void *ejecucion_banco(){
-    for (size_t i = 0; i < count; i++) {
+    //for (size_t i = 0; i < count; i++) {
         //leer transcaciones creo
-    }
+  //  }
       char buff[2];
-      while(read(sucPipe[0] , buff , 1 ) > 0 {
-        printf("Soy la sucursal '%d' y me llego mensaje '%s'\n",
-          sucId, buff);
+    //  while(read(sucPipe[0] , buff , 1 ) > 0 {
+    //    printf("Soy la sucursal '%d' y me llego mensaje '%s'\n",
+    //      sucId, buff);
 
-      }
+  //    }
 
   // Aca leer las transacciones y nose que mas
 }
@@ -65,8 +65,8 @@ int RandRange(int Min, int Max){
     return (int) (((double)(diff+1)/RAND_MAX) * rand() + Min);
 }
 
-void *makeTransactions(void *t, int *sucList, int _o_suc, int _d_suc){
-  transaction *transaction_data = (transaction*)t;
+void *makeTransactions(void *transaction,int _o_suc, int _d_suc){
+  transaction *transaction_data = (transaction*)transaction;
   transaction_data->amount = RandRange(1000, 500000000);
   transaction_data->type = RandRange(1, 3);
   transaction_data->o_suc = _o_suc;
@@ -92,7 +92,7 @@ void *makeTransactions(void *t, int *sucList, int _o_suc, int _d_suc){
 
     }else{
       transaction_data->o_account = o_account - amount;
-      transaction_data->d_account = d_account + amount;      
+      transaction_data->d_account = d_account + amount;
     }
   }
 
@@ -259,8 +259,9 @@ int main(int argc, char** argv) {
       // Proceso de sucursal
       else if (!sucid) {
         int sucId = getpid() % 1000;
+        int ran_num = RandRange(0,count);
         while ( l < T ){
-            err = pthread_create(&t_sucursal[l],NULL,ejecucion_sucursal,NULL);
+            err = pthread_create(&t_sucursal[l],NULL, makeTransactions(sucList[ran_num],sucList[ran_num]),NULL);
             if ( err != 0) {
               printf("%s%d\n", "No se puede crear thread " , strerror(err) );
             }
