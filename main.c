@@ -42,9 +42,21 @@ int generate_transactions(){
 }
 
 void *ejecucion_sucursal(){
+
   // Aca hacer todo lo que deberia hacer una sucursal , retirar, depositar , transferir entre sucursales etc , generar transacciones aleatorias.
 }
+
 void *ejecucion_banco(){
+    for (size_t i = 0; i < count; i++) {
+        //leer transcaciones creo
+    }
+      char buff[2];
+      while(read(sucPipe[0] , buff , 1 ) > 0 {
+        printf("Soy la sucursal '%d' y me llego mensaje '%s'\n",
+          sucId, buff);
+
+      }
+
   // Aca leer las transacciones y nose que mas
 }
 
@@ -61,6 +73,7 @@ int main(int argc, char** argv) {
   int l;
   char line[256];
   int *accounts;
+
   size_t bufsize = 512;
   char* commandBuf = malloc(sizeof(char)*bufsize);
 
@@ -257,6 +270,9 @@ int main(int argc, char** argv) {
   }
 
   printf("Terminando ejecucion limpiamente...\n");
+  free(commandBuf);
+  free(accounts);
+  free(sucList);
   // Cerrar lado de escritura del pipe
   close(bankPipe[1]);
 

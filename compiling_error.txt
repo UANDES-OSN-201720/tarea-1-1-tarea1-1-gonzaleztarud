@@ -1,4 +1,0 @@
-/tmp/ccNylLdc.o: En la función `main':
-main.c:(.text+0x18f): referencia a `pthread_create' sin definir
-main.c:(.text+0x86d): referencia a `pthread_create' sin definir
-collect2: error: ld returned 1 exit status
