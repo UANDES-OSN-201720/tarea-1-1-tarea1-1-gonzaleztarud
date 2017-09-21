@@ -18,6 +18,7 @@
 // libremente para lograr esto.
   int count = 0;
   int *sucList;
+  int *accountList;
 
 typedef struct transaction{
   int o_suc; //sucursal de origen
@@ -57,15 +58,19 @@ void *makeTransactions(void *thread){
   struct transaction t1;
   //transaction *transaction_data = (transaction*)thread;
   t1.amount = RandRange(1000, 500000000);
-  printf("%s\n", "Hola" );
+  //printf("%d\n", t1.amount );
   t1.type = RandRange(1, 3);
   t1.o_suc = sucList[ran_num];
+  t1.o_account = accountList[ran_num];
   t1.d_suc = sucList[ran_num];
+  t1.d_account = accountList[ran_num];
 
 
   if (t1.type== 1) {
     //deposito
+    //printf("%d, %s\n",t1.d_account, "Deposito" );
     t1.d_account = t1.d_account + t1.amount;
+    //printf("%d, %s\n",t1.d_account, "Deposito" );
 
   }else if (t1.type == 2) {
     //retiro
@@ -109,7 +114,7 @@ int main(int argc, char** argv) {
 
   sucList = (int*)malloc(sizeof(int)*200);
 
-  int *accountList;
+
   accountList = (int*)malloc(sizeof(int)*200);
 
   int *terminalList;
