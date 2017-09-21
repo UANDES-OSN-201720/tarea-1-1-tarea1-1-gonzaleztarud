@@ -18,7 +18,7 @@
 // libremente para lograr esto.
   int count = 0;
   int *sucList;
-  
+
 typedef struct thread{
   int o_suc; //sucursal de origen
   int d_suc; //sucursal de destino
@@ -111,6 +111,9 @@ int main(int argc, char** argv) {
   int *accountList;
   accountList = (int*)malloc(sizeof(int)*200);
 
+  int *terminalList;
+  terminalList = (int*)malloc(sizeof(int)*200);
+
 
   // Para guardar descriptores de pipe
   // el elemento 0 es para lectura
@@ -143,7 +146,8 @@ int main(int argc, char** argv) {
         printf("%s\n", "Sucursales actualmente activas: \n" );
         for (size_t i = 0; i < count; i++) {
           printf("ID: '%d'", sucList[i]);
-          printf("  Cuentas actualmente activas: '%d'\n", accountList[i] );
+          printf("  Cuentas actualmente activas: '%d'", accountList[i] );
+          printf("  Terminales actualmente activas: '%d'\n", terminalList[i]);
         }
     }
     else if (!strncmp("dump_accs", commandBuf, strlen("dump_accs"))){
@@ -224,8 +228,9 @@ int main(int argc, char** argv) {
            }
           }
         }
-
+      terminalList[count] = T;
       accountList[count] = N;
+
 
       accounts = (int*)malloc(sizeof(int)*N);
 
