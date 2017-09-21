@@ -18,6 +18,7 @@
 // libremente para lograr esto.
   int count = 0;
   int *sucList;
+  
 typedef struct thread{
   int o_suc; //sucursal de origen
   int d_suc; //sucursal de destino
@@ -26,21 +27,6 @@ typedef struct thread{
   int amount;
   int type; //1: deposito, 2: retiro, 3: transferencia
 }transaction;
-
-int money_withdraw(transaction t){
-//Metodo para retirar dinero de cuenta
-}
-
-int money_deposit(transaction t) {
- // Metodo para transferir dinero de cuenta origen a una cuenta de destino
-}
-int raise_money(int sucid, int *accounts , int mono){
- //Metodo para aumentar dinero en una cuenta
-}
-
-int generate_transactions(){
- //int time_ = RandRange(100,500);
-}
 
 void *ejecucion_sucursal(){
 
@@ -57,8 +43,7 @@ void *ejecucion_banco(){
     //      sucId, buff);
 
   //    }
-
-  // Aca leer las transacciones y nose que mas
+  // Aca leer las transacciones y
 }
 
 int RandRange(int Min, int Max){
@@ -101,10 +86,8 @@ void *makeTransactions(void *thread){
       (*transaction_data).d_account = (*transaction_data).d_account + (*transaction_data).amount;
     }
   }
-  
 
 return NULL;
-
 }
 
 
