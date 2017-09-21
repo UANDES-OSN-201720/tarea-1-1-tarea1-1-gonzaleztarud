@@ -19,14 +19,14 @@
   int count = 0;
   int *sucList;
 
-typedef struct thread{
+typedef struct transaction{
   int o_suc; //sucursal de origen
   int d_suc; //sucursal de destino
   int o_account; //cuenta de origen
   int d_account; //cuenta de destino
   int amount;
   int type; //1: deposito, 2: retiro, 3: transferencia
-}transaction;
+};
 
 void *ejecucion_sucursal(){
 
@@ -54,36 +54,37 @@ int RandRange(int Min, int Max){
 void *makeTransactions(void *thread){
   int ran_num = RandRange(0,count);
 
+  struct transaction t1;
+  //transaction *transaction_data = (transaction*)thread;
+  t1.amount = RandRange(1000, 500000000);
+  printf("%s\n", "Hola" );
+  t1.type = RandRange(1, 3);
+  t1.o_suc = sucList[ran_num];
+  t1.d_suc = sucList[ran_num];
 
-  transaction *transaction_data = (transaction*)thread;
-  (*transaction_data).amount = RandRange(1000, 500000000);
-  (*transaction_data).type = RandRange(1, 3);
-  (*transaction_data).o_suc = sucList[ran_num];
-  (*transaction_data).d_suc = sucList[ran_num];
 
-
-  if ((*transaction_data).type== 1) {
+  if (t1.type== 1) {
     //deposito
-    (*transaction_data).d_account = (*transaction_data).d_account + (*transaction_data).amount;
+    t1.d_account = t1.d_account + t1.amount;
 
-  }else if ((*transaction_data).type == 2) {
+  }else if (t1.type == 2) {
     //retiro
-    if (  (*transaction_data).d_account <= 0) {
+    if (  t1.d_account <= 0) {
       printf("%s\n", "Error, no tiene dinero suficiente para hacer un retiro \n" );
       /* code */
     }else{
-      (*transaction_data).d_account = (*transaction_data).d_account - (*transaction_data).amount;
+      t1.d_account = t1.d_account - t1.amount;
     }
 
-  }else if (transaction_data->type == 3) {
+  }else if (t1.type == 3) {
     //transferencia
-    if ((*transaction_data).o_account <= 0) {
+    if (t1.o_account <= 0) {
       /* code */
       printf("%s\n", "Error, no tiene dinero suficiente para hacer una transferencia \n" );
 
     }else{
-      (*transaction_data).o_account = (*transaction_data).o_account - (*transaction_data).amount;
-      (*transaction_data).d_account = (*transaction_data).d_account + (*transaction_data).amount;
+      t1.o_account = t1.o_account - t1.amount;
+      t1.d_account = t1.d_account + t1.amount;
     }
   }
 
