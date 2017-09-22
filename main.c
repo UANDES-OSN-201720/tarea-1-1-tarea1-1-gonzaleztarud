@@ -30,6 +30,10 @@
   int origin[300];
   int destiny[300];
 
+  pthread_mutex_t tran_mutex = PTHREAD_MUTEX_INITIALIZER;  //Mutex para la generacion de transacciones
+  pthread_mutex_t pipe_mutex = PTHREAD_MUTEX_INITIALIZER;  //Mutex para escribir en pipe
+
+
 
 
 typedef struct transaction{
@@ -42,15 +46,6 @@ typedef struct transaction{
 };
 
 
-//malloc(totalTransactions * sizeof (transaction));
-
-
-//malloc(totalTransactions * sizeof *totalTransactions);
-void *ejecucion_sucursal(){
-
-  // Aca hacer todo lo que deberia hacer una sucursal , retirar, depositar , transferir entre sucursales etc , generar transacciones aleatorias.
-}
-
 void *ejecucion_banco(){
     //for (size_t i = 0; i < count; i++) {
         //leer transcaciones creo
@@ -61,7 +56,7 @@ void *ejecucion_banco(){
     //      sucId, buff);
 
   //    }
-  // Aca leer las transacciones y
+  //
 }
 
 
@@ -72,6 +67,7 @@ int RandRange(int Min, int Max){
 }
 
 void *makeTransactions(void *thread){
+  pthread_mutex_lock(&tran_mutex);
   int ran_num = RandRange(0,count);
 
   struct transaction t1;
@@ -80,7 +76,6 @@ void *makeTransactions(void *thread){
   //printf("%d\n", t1.amount );
   t1.type = RandRange(1, 3);
   t1.o_suc = sucList[ran_num];
-  printf("%d\n", t1.o_suc );
   t1.o_account = accountList[ran_num];
   t1.d_suc = sucList[ran_num];
   t1.d_account = accountList[ran_num];
@@ -88,9 +83,8 @@ void *makeTransactions(void *thread){
 
   if (t1.type== 1) {
     //deposito
-    //printf("%d, %s\n",t1.d_account, "Deposito" );
     t1.d_account = t1.d_account + t1.amount;
-    //printf("%d, %s\n",t1.d_account, "Deposito" );
+
 
   }else if (t1.type == 2) {
     //retiro
@@ -112,24 +106,14 @@ void *makeTransactions(void *thread){
       t1.d_account = t1.d_account + t1.amount;
     }
   }
-  //for (size_t i = 0; i < totalTransactions; i++) {
-    //transactionList[i].o_suc = t1.o_suc;
-    //transactionList[i].d_suc = t1.d_suc;
-    //transactionList[i].o_account = t1.o_account;
-    //transactionList[i].d_account = t1.d_account;
-    //transactionList[i].amount = t1.amount;
-    //transactionList[i].type = t1.type;
-  //}
 
   type[t] = t1.type;
   media[t] = t1.o_suc;
   origin[t] = t1.o_account;
   destiny[t] = t1.d_account;
 
-
+  pthread_mutex_unlock(&tran_mutex);
   t++;
-
-
 
 return NULL;
 }
@@ -150,11 +134,7 @@ int main(int argc, char** argv) {
 
   pthread_t t_banco, t_sucursal[8];
 
-
-
   sucList = (int*)malloc(sizeof(int)*200);
-
-
 
   accountList = (int*)malloc(sizeof(int)*200);
 
@@ -329,8 +309,9 @@ int main(int argc, char** argv) {
         }
         // Enviando saludo a la sucursal
         char msg[] = "Hola sucursal, como estas?";
+        pthread_mutex_lock(&pipe_mutex);
         write(bankPipe[1], msg, (strlen(msg)+1));
-
+        pthread_mutex_unlock(&pipe_mutex);
         count++;
 
         continue;
