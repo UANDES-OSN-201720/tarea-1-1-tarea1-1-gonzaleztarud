@@ -17,8 +17,20 @@
 // distribuidas en headers. Pueden modificar el Makefile
 // libremente para lograr esto.
   int count = 0;
+  int totalTransactions = 200;
+  int t = 0;
+  char conversionBuffer[70];
+
   int *sucList;
   int *accountList;
+  int *transactionList;
+
+  int type[300];
+  int media[300];
+  int origin[300];
+  int destiny[300];
+
+
 
 typedef struct transaction{
   int o_suc; //sucursal de origen
@@ -29,6 +41,11 @@ typedef struct transaction{
   int type; //1: deposito, 2: retiro, 3: transferencia
 };
 
+
+//malloc(totalTransactions * sizeof (transaction));
+
+
+//malloc(totalTransactions * sizeof *totalTransactions);
 void *ejecucion_sucursal(){
 
   // Aca hacer todo lo que deberia hacer una sucursal , retirar, depositar , transferir entre sucursales etc , generar transacciones aleatorias.
@@ -47,6 +64,8 @@ void *ejecucion_banco(){
   // Aca leer las transacciones y
 }
 
+
+
 int RandRange(int Min, int Max){
     int diff = Max-Min;
     return (int) (((double)(diff+1)/RAND_MAX) * rand() + Min);
@@ -61,6 +80,7 @@ void *makeTransactions(void *thread){
   //printf("%d\n", t1.amount );
   t1.type = RandRange(1, 3);
   t1.o_suc = sucList[ran_num];
+  printf("%d\n", t1.o_suc );
   t1.o_account = accountList[ran_num];
   t1.d_suc = sucList[ran_num];
   t1.d_account = accountList[ran_num];
@@ -92,6 +112,24 @@ void *makeTransactions(void *thread){
       t1.d_account = t1.d_account + t1.amount;
     }
   }
+  //for (size_t i = 0; i < totalTransactions; i++) {
+    //transactionList[i].o_suc = t1.o_suc;
+    //transactionList[i].d_suc = t1.d_suc;
+    //transactionList[i].o_account = t1.o_account;
+    //transactionList[i].d_account = t1.d_account;
+    //transactionList[i].amount = t1.amount;
+    //transactionList[i].type = t1.type;
+  //}
+
+  type[t] = t1.type;
+  media[t] = t1.o_suc;
+  origin[t] = t1.o_account;
+  destiny[t] = t1.d_account;
+
+
+  t++;
+
+
 
 return NULL;
 }
@@ -108,11 +146,14 @@ int main(int argc, char** argv) {
   size_t bufsize = 512;
   char* commandBuf = malloc(sizeof(char)*bufsize);
 
+  transactionList = (int*)malloc(sizeof(int)*totalTransactions);
+
   pthread_t t_banco, t_sucursal[8];
 
 
 
   sucList = (int*)malloc(sizeof(int)*200);
+
 
 
   accountList = (int*)malloc(sizeof(int)*200);
@@ -187,6 +228,38 @@ int main(int argc, char** argv) {
           }
         }
     }
+  }else if(!strncmp("dump", commandBuf, strlen("dump"))){
+    //printf("%s\n", "Este es el comando de dump" );
+    int id;
+    int j = 0;
+    char id_cast[20];
+    FILE *fp;
+    printf("%s\n", "Ingrese ID de sucursal para generar el archivo CSV: " );
+    if (fgets(line, sizeof(line) , stdin)) {
+      if(1 == sscanf(line,"%d" , &id)) {
+
+        for (int i = 0; i < N; i++) {
+
+          //if ( id == sucList[i] ){
+            sprintf(id_cast,"dump_%d.csv",id);
+            fp = fopen (id_cast, "w+");
+            fprintf(fp, "%s,%s,%s,%s\n", "Tipo de transaccion" , "Medio de origen", "Cuenta origen", "Cuenta destino" );
+            while (j < N) {
+
+            char inicial_buffer[100];
+            fprintf(fp, "%d,%d,%d,%d\n" ,type[j], media[j], origin[j], destiny[j] );
+            j++;
+          }
+            fclose (fp);
+
+          //}
+          //else {
+            //printf("%s\n", "Error, ID no registrado" );
+            //break;
+          //}
+        }
+      }
+  }
   }
     else if (!strncmp("kill", commandBuf, strlen("kill"))){
       int id;
@@ -236,6 +309,10 @@ int main(int argc, char** argv) {
         }
       terminalList[count] = T;
       accountList[count] = N;
+
+      //Llenamos el arreglo de estructuras de transacciones
+
+
 
 
       accounts = (int*)malloc(sizeof(int)*N);
