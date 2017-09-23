@@ -35,6 +35,7 @@ El mayor problema de las funciones que faltaron fue el no haber tenido suficient
 
 Casa Matriz: 
 * Crea un thread para gestionar sucursales.
+
 Sucursales:
 * Permite que, al iniciar una sucursal, el usuario determine el número de terminales que desea que se ejecuten, con un mínimo de 1 y un máximo de 8.
 * Permite listar las sucursales que están activas, así como el número de cuentas y terminales asociadas a ellas mediante dos arreglos con el comando “list”.
